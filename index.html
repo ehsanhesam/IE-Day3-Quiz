@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <title>Day 3 IE Quiz - Heuristics</title>
+  <style>
+    :root { --bg:#0f172a; --card:#ffffff; --ink:#172033; --muted:#64748b; --accent:#2563eb; --accent2:#f97316; --good:#16a34a; --bad:#dc2626; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: linear-gradient(135deg,#0f172a,#1e3a8a); color: var(--ink); min-height:100vh; }
+    .wrap { width: min(940px, 94vw); margin: 0 auto; padding: 18px 0 32px; }
+    .hero { color:white; text-align:center; padding:18px 10px 10px; }
+    .hero h1 { margin:8px 0 4px; font-size: clamp(28px, 7vw, 46px); }
+    .hero p { margin: 6px auto; max-width: 760px; font-size: 17px; opacity: .95; }
+    .card { background: var(--card); border-radius: 24px; padding: 22px; box-shadow: 0 20px 50px rgba(0,0,0,.25); margin: 16px 0; }
+    .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:center; }
+    .pill { display:inline-block; border-radius:999px; padding:8px 12px; background:#e0f2fe; color:#075985; font-weight:700; margin:4px; }
+    button { -webkit-appearance:none; appearance:none; border:0; border-radius:16px; padding:14px 16px; font-weight:800; font-size:16px; cursor:pointer; touch-action: manipulation; }
+    .primary { background: var(--accent); color:white; box-shadow: 0 8px 20px rgba(37,99,235,.35); }
+    .secondary { background:#e2e8f0; color:#0f172a; }
+    .option { width:100%; text-align:left; background:#f8fafc; border:2px solid #e2e8f0; margin:8px 0; color:#111827; }
+    .option:active { transform: scale(.99); }
+    .option.correct { background:#dcfce7; border-color:#16a34a; }
+    .option.wrong { background:#fee2e2; border-color:#dc2626; }
+    .hidden { display:none !important; }
+    .progressBox { height: 14px; background:#e2e8f0; border-radius:999px; overflow:hidden; margin: 12px 0; }
+    .progress { height:100%; width:0%; background:linear-gradient(90deg,#22c55e,#2563eb); transition: width .3s ease; }
+    .questionNum { color: var(--muted); font-weight:800; margin-bottom:6px; }
+    .questionText { font-size: clamp(20px, 5vw, 29px); line-height:1.25; font-weight:900; margin:10px 0 14px; }
+    .feedback { margin-top:12px; padding:14px; border-radius:16px; background:#f1f5f9; font-weight:650; }
+    .bigscore { font-size: clamp(42px, 12vw, 82px); font-weight:1000; text-align:center; color:#1d4ed8; }
+    .small { font-size:14px; color:#64748b; }
+    .reviewItem { border-left: 5px solid #dbeafe; padding: 10px 12px; margin: 12px 0; background:#f8fafc; border-radius:12px; }
+    .emoji { font-size: 42px; }
+    input { width:100%; padding:14px; border-radius:14px; border:2px solid #cbd5e1; font-size:16px; }
+    @media (max-width: 600px) { .card { padding: 18px; border-radius:20px; } button { font-size:15px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="emoji">🧠⚙️🎯</div>
+      <h1>Day 3 IE Quiz</h1>
+      <p>Heuristics, biases, decision traps, and the art of not being fooled by your own brain.</p>
+    </div>
+
+    <section id="start" class="card">
+      <h2>Welcome, decision engineer!</h2>
+      <p>This quiz has 12 short questions. Some are easy, some are sneaky. Read carefully: your intuition may try to trick you.</p>
+      <label for="studentName"><strong>Your name or team name</strong></label>
+      <input id="studentName" type="text" placeholder="Example: Team Optimizers">
+      <div class="row" style="margin-top:16px;">
+        <span class="pill">12 questions</span><span class="pill">No login</span><span class="pill">Screenshot your score</span>
+      </div>
+      <div class="row" style="margin-top:18px;">
+        <button id="startBtn" class="primary">Start Quiz 🚀</button>
+      </div>
+    </section>
+
+    <section id="quiz" class="card hidden">
+      <div class="questionNum" id="questionNum"></div>
+      <div class="progressBox"><div class="progress" id="progress"></div></div>
+      <div class="questionText" id="questionText"></div>
+      <div id="options"></div>
+      <div id="feedback" class="feedback hidden"></div>
+      <div class="row" style="margin-top:16px;">
+        <button id="nextBtn" class="primary hidden">Next ➜</button>
+      </div>
+    </section>
+
+    <section id="result" class="card hidden">
+      <h2 style="text-align:center;">Quiz completed!</h2>
+      <div class="bigscore" id="scoreText"></div>
+      <p id="resultMessage" style="text-align:center; font-size:19px; font-weight:800;"></p>
+      <p class="small" style="text-align:center;">Take a screenshot of this page and show it to your instructor.</p>
+      <div class="row"><button id="restartBtn" class="secondary">Try Again 🔁</button></div>
+      <h3>Review</h3>
+      <div id="review"></div>
+    </section>
+  </div>
+
+<script>
+(function() {
+  'use strict';
+  var questions = [{"q": "You see three news stories about airplane accidents this week, so you feel flying is suddenly very dangerous. Which bias may be affecting you?", "options": ["Availability heuristic", "Conjunction fallacy", "Loss aversion", "Confirmation trap"], "answer": 0, "explanation": "Recent and vivid examples are easy to remember, so they can make a rare event feel more likely."}, {"q": "In the taxi problem, a witness says the taxi was Blue. Why is “80% witness accuracy” not enough by itself?", "options": ["Because witnesses always lie", "Because we also need the base rates of Blue and Green taxis", "Because probabilities must always add to 80%", "Because Blue taxis are impossible at night"], "answer": 1, "explanation": "The correct posterior probability depends on both witness accuracy and how common each taxi company is."}, {"q": "A store first shows you a very expensive jacket. After that, a medium-priced jacket feels reasonable. What is this mostly an example of?", "options": ["Availability", "Base-rate neglect", "Anchoring and adjustment", "Misconception of chance"], "answer": 2, "explanation": "The first price becomes an anchor, and your judgment adjusts from it."}, {"q": "Which statement best describes bounded rationality?", "options": ["People always find the optimal solution", "People never use logic", "People should ignore data", "People have limited time, information, and mental effort, so they often choose a good-enough option"], "answer": 3, "explanation": "Bounded rationality means decision makers operate under cognitive and information limits."}, {"q": "Which option is more likely in six fair coin flips: H-H-T-H-T-H or H-H-H-H-H-H?", "options": ["They are equally likely", "H-H-T-H-T-H is more likely because it looks random", "H-H-H-H-H-H is more likely because it is simpler", "Neither can happen"], "answer": 0, "explanation": "Each exact six-flip sequence has probability (1/2)^6."}, {"q": "Pia is described as outspoken and active in social causes. A student says “Pia is a bank teller and an activist” is more likely than “Pia is a bank teller.” What is the mistake?", "options": ["Anchoring", "Conjunction fallacy", "Availability", "Framing"], "answer": 1, "explanation": "A combined event cannot be more likely than one of its parts."}, {"q": "You believe your project idea is excellent, so you only search for examples that support it. Which trap is this?", "options": ["Loss aversion", "Base-rate neglect", "Confirmation trap", "Random sampling"], "answer": 2, "explanation": "Confirmation bias/trap means searching for evidence that supports your existing belief and ignoring disconfirming evidence."}, {"q": "Two plans are mathematically equivalent, but one is described as “jobs saved” and the other as “jobs lost.” Students choose differently. What caused the change?", "options": ["More data", "Better arithmetic", "Perfect rationality", "Framing"], "answer": 3, "explanation": "Framing changes the reference point and can change risk preference."}, {"q": "What is the correct result of 1×2×3×4×5×6×7×8?", "options": ["40,320", "4,200", "5,000", "8,888"], "answer": 0, "explanation": "The product is 8! = 40,320. The order of multiplication should not change the answer."}, {"q": "A fair lottery draws 6 numbers. Which sequence is more likely: 1-2-3-4-5-6 or 4-7-13-19-47-63?", "options": ["4-7-13-19-47-63 is much more likely", "They are equally likely as exact sequences", "1-2-3-4-5-6 is impossible", "The sequence with bigger numbers is always more likely"], "answer": 1, "explanation": "In a fair lottery, every exact valid combination has the same probability, even if one looks more random."}, {"q": "Which sentence best summarizes System 2?", "options": ["Fast, automatic, and effortless", "Always wrong", "Slow, conscious, and effortful", "Only used by computers"], "answer": 2, "explanation": "System 2 represents deliberate and effortful thinking."}, {"q": "In prospect theory, losses usually feel ______ equivalent gains.", "options": ["exactly the same as", "less important than", "unrelated to", "more painful than"], "answer": 3, "explanation": "Loss aversion means losses tend to feel stronger than equivalent gains."}];
+  var current = 0;
+  var score = 0;
+  var answers = [];
+  var answered = false;
+  var letters = ['A','B','C','D'];
+
+  function byId(id) { return document.getElementById(id); }
+  function show(id) { byId(id).classList.remove('hidden'); }
+  function hide(id) { byId(id).classList.add('hidden'); }
+
+  function startQuiz() {
+    current = 0; score = 0; answers = []; answered = false;
+    hide('start'); hide('result'); show('quiz');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    answered = false;
+    var q = questions[current];
+    byId('questionNum').textContent = 'Question ' + (current + 1) + ' of ' + questions.length;
+    byId('progress').style.width = ((current) / questions.length * 100) + '%';
+    byId('questionText').textContent = q.q;
+    byId('feedback').textContent = '';
+    hide('feedback'); hide('nextBtn');
+    var optBox = byId('options');
+    optBox.innerHTML = '';
+    q.options.forEach(function(opt, idx) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'option';
+      btn.textContent = letters[idx] + '. ' + opt;
+      btn.setAttribute('data-index', String(idx));
+      btn.addEventListener('click', function() { chooseAnswer(idx); });
+      optBox.appendChild(btn);
+    });
+  }
+
+  function chooseAnswer(idx) {
+    if (answered) return;
+    answered = true;
+    var q = questions[current];
+    var correct = idx === q.answer;
+    if (correct) score += 1;
+    answers.push(idx);
+    var buttons = document.querySelectorAll('.option');
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].disabled = true;
+      if (i === q.answer) buttons[i].classList.add('correct');
+      if (i === idx && idx !== q.answer) buttons[i].classList.add('wrong');
+    }
+    byId('feedback').innerHTML = (correct ? '✅ Correct! ' : '❌ Not this time. ') + q.explanation;
+    show('feedback'); show('nextBtn');
+    byId('progress').style.width = ((current + 1) / questions.length * 100) + '%';
+  }
+
+  function nextQuestion() {
+    current += 1;
+    if (current >= questions.length) { showResult(); } else { renderQuestion(); }
+  }
+
+  function showResult() {
+    hide('quiz'); show('result');
+    var name = byId('studentName').value.trim() || 'Decision Engineer';
+    byId('scoreText').textContent = score + ' / ' + questions.length;
+    var msg = '';
+    if (score >= 10) msg = 'Excellent, ' + name + '! Your System 2 is awake. 🧠';
+    else if (score >= 7) msg = 'Good work, ' + name + '! A few decision traps tried to catch you. ⚙️';
+    else msg = 'Nice try, ' + name + '! Review the traps and try again. 🔍';
+    byId('resultMessage').textContent = msg;
+    var review = byId('review');
+    review.innerHTML = '';
+    questions.forEach(function(q, i) {
+      var div = document.createElement('div');
+      div.className = 'reviewItem';
+      var your = answers[i];
+      var yourText = typeof your === 'number' ? letters[your] + '. ' + q.options[your] : 'No answer';
+      var correctText = letters[q.answer] + '. ' + q.options[q.answer];
+      div.innerHTML = '<strong>Q' + (i+1) + '.</strong> ' + escapeHtml(q.q) + '<br>' +
+        '<span>Your answer: ' + escapeHtml(yourText) + '</span><br>' +
+        '<span>Correct answer: <strong>' + escapeHtml(correctText) + '</strong></span><br>' +
+        '<span class="small">' + escapeHtml(q.explanation) + '</span>';
+      review.appendChild(div);
+    });
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function(ch) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    byId('startBtn').addEventListener('click', startQuiz);
+    byId('nextBtn').addEventListener('click', nextQuestion);
+    byId('restartBtn').addEventListener('click', startQuiz);
+  });
+}());
+</script>
+</body>
+</html>
