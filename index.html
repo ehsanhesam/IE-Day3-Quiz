@@ -84,7 +84,7 @@
 <script>
 (function() {
   'use strict';
-  var questions = [{"q": "You see three news stories about airplane accidents this week, so you feel flying is suddenly very dangerous. Which bias may be affecting you?", "options": ["Availability heuristic", "Conjunction fallacy", "Loss aversion", "Confirmation trap"], "answer": 0, "explanation": "Recent and vivid examples are easy to remember, so they can make a rare event feel more likely."}, {"q": "In the taxi problem, a witness says the taxi was Blue. Why is “80% witness accuracy” not enough by itself?", "options": ["Because witnesses always lie", "Because we also need the base rates of Blue and Green taxis", "Because probabilities must always add to 80%", "Because Blue taxis are impossible at night"], "answer": 1, "explanation": "The correct posterior probability depends on both witness accuracy and how common each taxi company is."}, {"q": "A store first shows you a very expensive jacket. After that, a medium-priced jacket feels reasonable. What is this mostly an example of?", "options": ["Availability", "Base-rate neglect", "Anchoring and adjustment", "Misconception of chance"], "answer": 2, "explanation": "The first price becomes an anchor, and your judgment adjusts from it."}, {"q": "Which statement best describes bounded rationality?", "options": ["People always find the optimal solution", "People never use logic", "People should ignore data", "People have limited time, information, and mental effort, so they often choose a good-enough option"], "answer": 3, "explanation": "Bounded rationality means decision makers operate under cognitive and information limits."}, {"q": "Which option is more likely in six fair coin flips: H-H-T-H-T-H or H-H-H-H-H-H?", "options": ["They are equally likely", "H-H-T-H-T-H is more likely because it looks random", "H-H-H-H-H-H is more likely because it is simpler", "Neither can happen"], "answer": 0, "explanation": "Each exact six-flip sequence has probability (1/2)^6."}, {"q": "Pia is described as outspoken and active in social causes. A student says “Pia is a bank teller and an activist” is more likely than “Pia is a bank teller.” What is the mistake?", "options": ["Anchoring", "Conjunction fallacy", "Availability", "Framing"], "answer": 1, "explanation": "A combined event cannot be more likely than one of its parts."}, {"q": "You believe your project idea is excellent, so you only search for examples that support it. Which trap is this?", "options": ["Loss aversion", "Base-rate neglect", "Confirmation trap", "Random sampling"], "answer": 2, "explanation": "Confirmation bias/trap means searching for evidence that supports your existing belief and ignoring disconfirming evidence."}, {"q": "Two plans are mathematically equivalent, but one is described as “jobs saved” and the other as “jobs lost.” Students choose differently. What caused the change?", "options": ["More data", "Better arithmetic", "Perfect rationality", "Framing"], "answer": 3, "explanation": "Framing changes the reference point and can change risk preference."}, {"q": "What is the correct result of 1×2×3×4×5×6×7×8?", "options": ["40,320", "4,200", "5,000", "8,888"], "answer": 0, "explanation": "The product is 8! = 40,320. The order of multiplication should not change the answer."}, {"q": "A fair lottery draws 6 numbers. Which sequence is more likely: 1-2-3-4-5-6 or 4-7-13-19-47-63?", "options": ["4-7-13-19-47-63 is much more likely", "They are equally likely as exact sequences", "1-2-3-4-5-6 is impossible", "The sequence with bigger numbers is always more likely"], "answer": 1, "explanation": "In a fair lottery, every exact valid combination has the same probability, even if one looks more random."}, {"q": "Which sentence best summarizes System 2?", "options": ["Fast, automatic, and effortless", "Always wrong", "Slow, conscious, and effortful", "Only used by computers"], "answer": 2, "explanation": "System 2 represents deliberate and effortful thinking."}, {"q": "In prospect theory, losses usually feel ______ equivalent gains.", "options": ["exactly the same as", "less important than", "unrelated to", "more painful than"], "answer": 3, "explanation": "Loss aversion means losses tend to feel stronger than equivalent gains."}];
+  var questions = [{"q": "You see three news stories about airplane accidents this week, so you feel flying is suddenly very dangerous. Which bias may be affecting you?", "options": ["Availability heuristic", "Conjunction fallacy", "Loss aversion", "Confirmation trap"], "answer": 0}, {"q": "In the taxi problem, a witness says the taxi was Blue. Why is “80% witness accuracy” not enough by itself?", "options": ["Because witnesses always lie", "Because we also need the base rates of Blue and Green taxis", "Because probabilities must always add to 80%", "Because Blue taxis are impossible at night"], "answer": 1}, {"q": "A store first shows you a very expensive jacket. After that, a medium-priced jacket feels reasonable. What is this mostly an example of?", "options": ["Availability", "Base-rate neglect", "Anchoring and adjustment", "Misconception of chance"], "answer": 2}, {"q": "Which statement best describes bounded rationality?", "options": ["People always find the optimal solution", "People never use logic", "People should ignore data", "People have limited time, information, and mental effort, so they often choose a good-enough option"], "answer": 3}, {"q": "Which option is more likely in six fair coin flips: H-H-T-H-T-H or H-H-H-H-H-H?", "options": ["They are equally likely", "H-H-T-H-T-H is more likely because it looks random", "H-H-H-H-H-H is more likely because it is simpler", "Neither can happen"], "answer": 0}, {"q": "Pia is described as outspoken and active in social causes. A student says “Pia is a bank teller and an activist” is more likely than “Pia is a bank teller.” What is the mistake?", "options": ["Anchoring", "Conjunction fallacy", "Availability", "Framing"], "answer": 1}, {"q": "You believe your project idea is excellent, so you only search for examples that support it. Which trap is this?", "options": ["Loss aversion", "Base-rate neglect", "Confirmation trap", "Random sampling"], "answer": 2}, {"q": "Two plans are mathematically equivalent, but one is described as “jobs saved” and the other as “jobs lost.” Students choose differently. What caused the change?", "options": ["More data", "Better arithmetic", "Perfect rationality", "Framing"], "answer": 3}, {"q": "What is the correct result of 1×2×3×4×5×6×7×8?", "options": ["40,320", "4,200", "5,000", "8,888"], "answer": 0}, {"q": "A fair lottery draws 6 numbers. Which sequence is more likely: 1-2-3-4-5-6 or 4-7-13-19-47-63?", "options": ["4-7-13-19-47-63 is much more likely", "They are equally likely as exact sequences", "1-2-3-4-5-6 is impossible", "The sequence with bigger numbers is always more likely"], "answer": 1}, {"q": "Which sentence best summarizes System 2?", "options": ["Fast, automatic, and effortless", "Always wrong", "Slow, conscious, and effortful", "Only used by computers"], "answer": 2}, {"q": "In prospect theory, losses usually feel ______ equivalent gains.", "options": ["exactly the same as", "less important than", "unrelated to", "more painful than"], "answer": 3}];
   var current = 0;
   var score = 0;
   var answers = [];
@@ -129,14 +129,22 @@
     var correct = idx === q.answer;
     if (correct) score += 1;
     answers.push(idx);
+
     var buttons = document.querySelectorAll('.option');
     for (var i = 0; i < buttons.length; i++) {
       buttons[i].disabled = true;
-      if (i === q.answer) buttons[i].classList.add('correct');
-      if (i === idx && idx !== q.answer) buttons[i].classList.add('wrong');
     }
-    byId('feedback').innerHTML = (correct ? '✅ Correct! ' : '❌ Not this time. ') + q.explanation;
-    show('feedback'); show('nextBtn');
+
+    if (correct) {
+      buttons[idx].classList.add('correct');
+      byId('feedback').textContent = '✅ Correct!';
+    } else {
+      buttons[idx].classList.add('wrong');
+      byId('feedback').textContent = '❌ Incorrect.';
+    }
+
+    show('feedback');
+    show('nextBtn');
     byId('progress').style.width = ((current + 1) / questions.length * 100) + '%';
   }
 
@@ -155,25 +163,7 @@
     else msg = 'Nice try, ' + name + '! Review the traps and try again. 🔍';
     byId('resultMessage').textContent = msg;
     var review = byId('review');
-    review.innerHTML = '';
-    questions.forEach(function(q, i) {
-      var div = document.createElement('div');
-      div.className = 'reviewItem';
-      var your = answers[i];
-      var yourText = typeof your === 'number' ? letters[your] + '. ' + q.options[your] : 'No answer';
-      var correctText = letters[q.answer] + '. ' + q.options[q.answer];
-      div.innerHTML = '<strong>Q' + (i+1) + '.</strong> ' + escapeHtml(q.q) + '<br>' +
-        '<span>Your answer: ' + escapeHtml(yourText) + '</span><br>' +
-        '<span>Correct answer: <strong>' + escapeHtml(correctText) + '</strong></span><br>' +
-        '<span class="small">' + escapeHtml(q.explanation) + '</span>';
-      review.appendChild(div);
-    });
-  }
-
-  function escapeHtml(str) {
-    return String(str).replace(/[&<>"']/g, function(ch) {
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
-    });
+    review.innerHTML = '<p class="small" style="text-align:center;">Review your score with your instructor. Correct answers are not shown in this quiz version.</p>';
   }
 
   document.addEventListener('DOMContentLoaded', function() {
